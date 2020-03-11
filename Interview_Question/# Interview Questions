@@ -1,0 +1,49 @@
+# Interview Questions
+
+1. HTTP 전문에 대한 설명 
+
+2. Response Code
+
+    100번대 : 정보 응답 
+
+    200번대 : 성공 응답
+
+    300번대 : Redirection 메세지
+
+    400번대 : 클라이언트 에러 응답
+
+    500번대 : 서버 에러 응답
+
+3. 자바 Collection에서 LinkedList와 ArrayList의 차이, 장 단점
+
+    검색 : 
+        
+        - ArrayList : O(1)
+
+        - LinkedList : O(N)
+
+    삽입, 삭제 :
+        
+        - ArrayList : 사이즈가 고정되어 있어 사이즈를 늘려주는 연산, 빈 인덱스를 채워주는 연산 필요
+        
+        - LinkedList : 사이에 삭제, 삽입 후 링크만 바꿔주면 됨
+
+    연속적인 저장 :
+    
+        - ArrayList : YES
+
+        - LinkedList : NO
+
+4. Interface, Abstract 차이
+
+5. 자바 call by value, call by reference
+
+    reference type (배열, enum, 클래스, 인터페이스) : call by reference
+
+    primitive type : call by value
+
+6. Spring Layered Architecture
+
+7. CORS
+
+8. 쿼리가 엄청 많은데 어떻게 처리하는가?
