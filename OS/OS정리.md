@@ -172,3 +172,146 @@ Process 관점
 
 2. 모든 프로세스 죽이기 (심각한 상황에서)
 ~~~
+
+**15. 메모리관리 (partition Memory Management)**
+~~~
+1. Single contigous allocation : 계속 이어지는 하나의 메모리
+
+2. Partitioned allocation : 메모리를 분할한 뒤 나눈다.
+
+3. Paged memory management : 가상 메모리에서 사용되는 고정된 사이즈의 page frame으로 나눈다.
+
+4. Segmented memory management : 다른 크기의 segment로 나눠 사용한다.
+~~~
+~~~
+1.First Fit : 메모리 상단에서 맞는 공간에 할당
+
+2. Best Fit : 가장 작으면서 잘 맞는 곳에 할당
+
+3. Worst Fit : 가장 널널한 곳에 할당
+
+4. Next Fit : First fit과 유사하지만 가장 마지막 할당부분에서 확인하면서 찾은 곳에 할당
+~~~
+Best Fit이 좋은것인가?
+~~~
+프로세서의 시간을 많이소요하며 fragmentation이 많이 발생한다.
+~~~
+
+**16. Virtual Memory in Operating System**
+~~~
+정의 : 보조 메모리를 메인 메모리의 일부인 것처럼 처리할 수 있는 스토리지 할당 체계다.
+
+프로그램이 실행되기 위해서는 디스크에서 메모리로 갖고와야한다.
+
+Main Memory와 register은 cpu가 바로 접근할 수 있는 저장공간이다.
+
+base Address / limit Address는 logical address
+
+base Address (relocation register)와 limit Address를 이용해 접근 x + base Addr
+
+- Logical Address : CPU에 의해 생성되며 virtual address라 불림
+
+- Physical Address : MMU에 의해서 보여지는 주소 (MMU가 virtual -> physical로 바꿔줌)
+
+External Fragmentation : 모든 메모리 space에서 비는 공간
+
+Internal Fragmentation : paging등에서 비는 부분
+~~~
+**17. Paging**
+~~~
+- 페이지란? -> virtual memory를 쪼개놓은 단위
+
+- 프레임이란? -> physical memory를 쪼개놓은 단위
+~~~
+  
+~~~
+free memory는 항상 track된다. (free frame list)
+
+p : page number (logical memory size가 2^m이고 page size가 2^n이면 (p = m – n))
+
+d : page offset (page size가 2^n이면 n)
+
+f : pagetable(p)
+
+page table은 main memory에 있다. (PTBR (page-table base register)이 가리키고 있다.)
+
+PTLR (page-table length register)는 페이지테이블에 길이를 나타낸다.
+
+every data/instruction access는 2번의 메모리 access가 필요. ( p-table, data/instruction)
+
+이를 방지하기위해 translation look-aside buffer(TLB)를 사용
+~~~
+**18. Demand Paging**
+~~~
+-   Demand Paging : 사용하는 부분만 메모리에 올리자
+ 
+-   Valid, Invalid Bit를 사용한다.
+
+-   메모리에 올리려는 것이 현재 메모리에 존재하는지 아니면 Disk에 존재하는지 알아야 한다.
+
+-   bit = valid : 접근이 가능하며 실제 메모리에 올라와있다.
+
+-   bit = invalid : 접근이 불가능하며 disk에 존재한다.
+~~~
+  
+~~~
+invalid bit인 경우 page fault(trap)이 된 후 디스크에 있는 data/instruction을 free frame인 physical memory에 올린 뒤 page table을 변경한 후 restart instruction
+
+free frame이 없다면 page replacement를 해야하고 다음에도 이런 일이 생기지 않도록 잘 바꿔야한다.
+
+1.  접근했을 때 invalid bit
+
+2. victim frame을 설정,
+
+3. victim frame에 정보를 disk에 저장 (swap out)
+
+4. victim frame를 invalid로 변경
+
+5. page를 가져와 victim frame자리로 올림
+
+6. 현재 필요한 page에 대응하는 frame을 victim frame의 frame #으로 변경(swap in)
+
+7. valid로 변경
+~~~
+
+Page replacement algorithm
+~~~
+1.  Optimal : 최적화된 replacement algorithm 하지만 미래 예측 불가, 측정 모델로 사용
+
+2.  FIFO : 가장 먼저 들어온 frame이 나감
+
+3.  LRU : 최근에 가장 안쓰인 frame이 나감
+~~~
+**19. Thrashing**
+~~~
+multiprogramming을 하면 CPU사용률이 적으면 새로운 프로세스를 시스템에 추가해서 다중프로그래밍의 정도를 높여준다. 그런데 페이지 테이블에서 현재 전에 사용하던 프로세스가 자주사용하던 페이지에 대한 paging fault가 발생하면 효율이 낮아진다.
+
+방지하기 위해서 각 프로세스가 최소한 사용하는 프레임의 개수를 보장해줘야한다.
+~~~
+**20. Process Scheduling**
+~~~
+-   preemptive : Shortest Remaining time First(starvation), RR, priority(starvation / aging)
+
+-   non-preemptive : FCFS, Shortest Job First (중간에 그만두지않고 쭉 이어감)
+
+-   Multilevel Queue : 프로세스를 어떤 프로세스냐에 따라 그룹을 나누고 여러 개의 큐에 priority를 주어 이를 처리한다. ex) foreground process > background process prior
+                       모두 ready queue로 나눈 뒤 이에 들어가서 이 순서대로 처리. 각 ready queue별로 처리
+
+-   Multilevel Feedback Queue : quantum 8인 큐, 그다음 quantum 16, 그다음 FCFS
+~~~
+
+**21. Kernel Thread vs User Thread**
+~~~
+User Thread
+
+- 스케줄링 우선순위가 없어 무슨 쓰레드가 먼저 수행될지 모른다.
+
+-   커널은 쓰레드의 존재를 모른다.
+-   동작중인 쓰레드가 blocking operation을 수행하면 모든 쓰레드가 멈춘다.
+~~~
+~~~
+Kernel Thread
+
+-   OS에 의해 구현되어있으며 OS가 존재에 대해 알고 있다.
+-   사용자 쓰레드 한 개당 커널 쓰레드 한 개를 할당하면 overhead가 크다.
+~~~
