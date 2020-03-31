@@ -1,4 +1,4 @@
-종만북 9.19 BLOCKGAME
+# 종만북 9.19 BLOCKGAME
 
 ![block](http://algospot.com/media/judge-attachments/065ff270c832fbe7dbc54af1227ddd5b/midgame.png)
 
@@ -121,4 +121,54 @@ public class Main {
 		Solution.solution();
 	}
 }
+```
+
+~~~
+아래의 피보나치를 구하는 함수도 sliding window tecnique를 적용.
+~~~
+
+```java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+import java.util.StringTokenizer;
+
+class Solution {
+	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static Scanner sc = new Scanner(System.in);
+	private static StringTokenizer st;
+	
+	public static void solution() {
+		
+		int iterator = sc.nextInt();
+		
+		for(int i = 0 ; i < iterator ; i++) {
+			int num = sc.nextInt();
+			fibo(num);
+		}
+	}
+
+	private static void fibo(int num) {
+		
+		int[] fibo = new int[num+1];
+		
+		fibo[0] = 1;
+		fibo[1] = 1;
+		for(int i = 2 ; i <= num ; i++) {
+			fibo[i%3] = (fibo[(i-1)%3] + fibo[(i-2)%3]) % 100000;
+		}
+		
+		System.out.println(fibo[num%3]);
+	}
+}
+
+public class Main {
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		
+		Solution.solution();
+	}
+}
+
 ```
